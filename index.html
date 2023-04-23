@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Record Audio</title>
+  </head>
+  <body>
+    <button id="recordButton" onmousedown="startRecording()" onmouseup="stopRecording()">Record</button>
+    <script>
+      const recordAudio = () =>
+        new Promise(async resolve => {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          const mediaRecorder = new MediaRecorder(stream);
+          let audioChunks = [];
+
+          mediaRecorder.addEventListener('dataavailable', event => {
+            audioChunks.push(event.data);
+          });
+
+          const start = () => {
+            audioChunks = [];
+            mediaRecorder.start();
+          };
+
+          const stop = () =>
+            new Promise(resolve => {
+              mediaRecorder.addEventListener('stop', () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audio = new Audio(audioUrl);
+                const play = () => audio.play();
+                resolve({ audioChunks, audioBlob, audioUrl, play });
+              });
+
+              mediaRecorder.stop();
+            });
+
+          resolve({ start, stop });
+        });
+
+      const startRecording = async () => {
+        chunks = [];
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.ondataavailable = e => chunks.push(e.data);
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(chunks, { type: 'audio/mp3' });
+          const url = URL.createObjectURL(blob);
+          console.log(url);
+
+          const formData = new FormData()
+          formData.append("audio_file", blob)
+
+          fetch("http://127.0.0.1:8000/upload_audio/", {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => {
+            console.log("Response from the server:", response);
+            console.log("Response received")
+          })
+          .catch(error => {
+            console.error("Error from the server:", error);
+          })
+          // Upload the blob to your server or do something else with it
+        };
+        mediaRecorder.start();
+      };
+
+      const stopRecording = () => {
+        console.log("stopping recording")
+        if (mediaRecorder && mediaRecorder.state === 'recording') {
+          mediaRecorder.stop();
+        }
+      };
+
+      navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(function(stream) {
+        console.log('You let me use your mic!')
+      })
+      .catch(function(err) {
+        console.log('No mic for you!')
+      });
+    </script>
+  </body>
+</html>
