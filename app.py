@@ -30,24 +30,12 @@ async def upload_audio_file(audio_file: UploadFile = File(...)):
     print(audio_file.content_type)
     print(audio_file.size)
 
-    tf = tempfile.NamedTemporaryFile(suffix='.mp3')
-    output_file = tf.name
-
-    # TODO - figure out how to do this without having to manually save the file
     contents = audio_file.file.read()
-    async with aiofiles.open(output_file, 'wb') as f:
-        await f.write(contents)
-
-    transcript = ''
-    async with aiofiles.open(output_file, "rb") as f:
-        
-        data = await f.read()
-
-        transcript = await openai.Audio.atranscribe_raw("whisper-1", data, output_file)
+    transcript = await openai.Audio.atranscribe_raw("whisper-1", contents, f"{audio_file.filename}.mp3")
 
     print (transcript)
 
     return {
-        "filename" : output_file,
+        "filename" : audio_file.filename,
         "transcription": transcript 
     }
