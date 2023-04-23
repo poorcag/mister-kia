@@ -6,3 +6,8 @@ Mister know-it-all
 4. convert answer to audio
 5. play audio
 
+
+TODO:
+- save temp files to separate dir
+- don't reload the page when a file is created
+- finish off hooking up core functionality
