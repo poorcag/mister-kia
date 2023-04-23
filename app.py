@@ -1,12 +1,7 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-import aiofiles
-import openai
-import tempfile
 
-from parsing import transcribe_from_audio
-
-openai.api_key_path = '.key'
+from parsing import transcribe_from_audio, answer_my_question
 
 app = FastAPI()
 
@@ -30,12 +25,12 @@ async def upload_audio_file(audio_file: UploadFile = File(...)):
     print(audio_file.content_type)
     print(audio_file.size)
 
-    contents = audio_file.file.read()
-    transcript = await openai.Audio.atranscribe_raw("whisper-1", contents, f"{audio_file.filename}.mp3")
+    transcript = await transcribe_from_audio(audio_file)
 
-    print (transcript)
+    answer = await answer_my_question(transcript)
 
     return {
         "filename" : audio_file.filename,
-        "transcription": transcript 
+        "transcription": transcript,
+        "answer": answer
     }

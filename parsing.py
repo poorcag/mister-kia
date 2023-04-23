@@ -4,29 +4,34 @@
 # result = model.transcribe("input.mp3")
 # print(result["text"])
 
-import os
 import openai
 
 openai.api_key_path = '.key'
 
-async def transcribe_from_audio(audio_blob):
-    print (audio_blob)
-    audio = openai.Audio(audio_blob.file)
-    transcript = openai.Audio.transcribe("whisper-1", audio)
+async def transcribe_from_audio(audio_file):
 
-    return transcript
+    contents = audio_file.file.read()
+    transcript = await openai.Audio.atranscribe_raw("whisper-1", contents, f"{audio_file.filename}.mp3")
 
-# response = openai.ChatCompletion.create(
-#   model="gpt-3.5-turbo",
-#   messages=[
-#         {"role": "system", "content": "You are a helpful assistant."},
-#         {"role": "user", "content": "Who won the world series in 2020?"},
-#         {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
-#         {"role": "user", "content": "Where was it played?"}
-#     ]
-# )
-# print(response)
+    body_text = transcript.get('text', '')
 
-# with open("input.mp3", "rb") as audio_file:
-#     transcript = openai.Audio.transcribe("whisper-1", audio_file)
-#     print(transcript)
+    return body_text
+
+async def answer_my_question(question_text):
+
+    print(question_text)
+
+    response = await openai.ChatCompletion.acreate(
+        model="gpt-3.5-turbo",
+        messages=[
+                {"role": "system", "content": "You are a helpful kindergarden teacher."},
+                {"role": "user", "content": "I'd like to ask you a question. Please keep your answer short, simple, and accurate. Answer like you're talking to a primary school student."},
+                {"role": "assistant", "content": "Of course, ask me anything you'd like!"},
+                {"role": "user", "content": question_text}
+            ]
+        )
+    print(response)
+
+    output_message = response.get('choices')[0].get('message').get('content')
+
+    return output_message
