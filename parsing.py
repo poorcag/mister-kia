@@ -1,6 +1,5 @@
 import openai
 from elevenlabs import set_api_key, generate
-from elevenlabs.api import Voices
 
 openai.api_key_path = '.key'
 
