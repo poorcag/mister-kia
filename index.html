@@ -24,14 +24,11 @@
             method: 'POST',
             body: formData
           })
-          .then(response => {
-            console.log("Response from the server:", response);
-
-            var binaryData = []
-            binaryData.push(response.blob)
-            var src = window.URL.createObjectURL(new Blob(binaryData, {type: "audio/mp3"}))
-
-            const audioElement = new Audio(src);
+          .then(response => response.blob())
+          .then((blob) => {
+            const objectURL = URL.createObjectURL(blob);
+            const audioElement = new Audio();
+            audioElement.src = objectURL;
             audioElement.play();
           })
           .catch(error => {

@@ -5,7 +5,7 @@
 # print(result["text"])
 
 import openai
-from elevenlabs import set_api_key, generate, play
+from elevenlabs import set_api_key, generate
 
 openai.api_key_path = '.key'
 
@@ -49,5 +49,4 @@ def text_to_speech(text):
 
     print (text)
     audio = generate(text)
-    play(audio)
     return audio
