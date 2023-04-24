@@ -1,11 +1,6 @@
-# import whisper
-
-# model = whisper.load_model("small")
-# result = model.transcribe("input.mp3")
-# print(result["text"])
-
 import openai
 from elevenlabs import set_api_key, generate
+from elevenlabs.api import Voices
 
 openai.api_key_path = '.key'
 
@@ -31,9 +26,9 @@ async def answer_my_question(question_text):
     response = await openai.ChatCompletion.acreate(
         model="gpt-3.5-turbo",
         messages=[
-                {"role": "system", "content": "You are a helpful primary school teacher."},
-                # {"role": "user", "content": "I'd like to ask you a question. You answer should be simple, accurate, and 2 sentences maximum. Answer kindly and politely like you're talking to a primary school student."},
-                {"role": "user", "content": "Answer my following question with 5 words maximum."},
+                {"role": "system", "content": "Your name is Mr. Know-it-all. You are a polite and helpful primary school teacher."},
+                {"role": "user", "content": "Excuse me, Mr. Know-it-all. I'd like to ask you a question. You answer should be simple, accurate, and 1 sentence maximum. Answer kindly and politely like you're talking to a primary school student."},
+                # {"role": "user", "content": "Answer my following question with 5 words maximum."},
                 {"role": "assistant", "content": "Of course, ask me anything you'd like!"},
                 {"role": "user", "content": question_text}
             ]
@@ -44,9 +39,7 @@ async def answer_my_question(question_text):
 
     return output_message
 
-
 def text_to_speech(text):
 
-    print (text)
-    audio = generate(text)
+    audio = generate(text, voice='Sam')
     return audio
