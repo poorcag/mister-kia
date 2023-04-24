@@ -26,12 +26,17 @@
           })
           .then(response => {
             console.log("Response from the server:", response);
-            console.log("Response received")
+
+            var binaryData = []
+            binaryData.push(response.blob)
+            var src = window.URL.createObjectURL(new Blob(binaryData, {type: "audio/mp3"}))
+
+            const audioElement = new Audio(src);
+            audioElement.play();
           })
           .catch(error => {
             console.error("Error from the server:", error);
           })
-          // Upload the blob to your server or do something else with it
         };
         mediaRecorder.start();
       };
