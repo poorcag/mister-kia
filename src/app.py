@@ -1,4 +1,5 @@
-from fastapi import FastAPI, File, UploadFile
+import json
+from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -24,14 +25,17 @@ async def read_index():
     return FileResponse('/static/index.html')
 
 @app.post("/upload_audio/")
-async def upload_audio_file(audio_file: UploadFile = File(...)):
+async def upload_audio_file(request: Request, audio_file: UploadFile = File(...)):
     print(audio_file.filename)
     print(audio_file.content_type)
     print(audio_file.size)
 
+    chat_context = request.headers.get('chat_context', '[]')
+    user_context = json.loads(chat_context)
+
     transcript = await transcribe_from_audio(audio_file)
 
-    answer = await answer_my_question(transcript)
+    answer = await answer_my_question(transcript, user_context)
 
     answer_audio = text_to_speech(answer)
 

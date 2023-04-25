@@ -21,6 +21,7 @@
       }
 
       var isResponding = false
+      var chatContext = []
 
       const startRecording = async () => {
         if (isResponding) {
@@ -39,17 +40,27 @@
           const formData = new FormData()
           formData.append("audio_file", blob)
 
+          const headers = new Headers();
+          headers.append('chat_context', JSON.stringify(chatContext));
+          console.log(chatContext)
+          
           fetch("http://localhost:8004/upload_audio/", {
             method: 'POST',
-            body: formData
+            body: formData,
+            headers: headers
           })
-          .then(response => response.blob())
-          .then((blob) => {
-            const objectURL = URL.createObjectURL(blob);
-            const audioElement = new Audio();
-            audioElement.src = objectURL;
-            audioElement.play();
-            isResponding = false;
+          .then(response => {
+            console.log("Response from server:", response);
+            chatContext.push(response.headers.get('transcription'))
+            chatContext.push(response.headers.get('answer'))
+            console.log(chatContext)
+            response.blob().then((blob) => {
+              const objectURL = URL.createObjectURL(blob);
+              const audioElement = new Audio();
+              audioElement.src = objectURL;
+              audioElement.play();
+              isResponding = false;
+            })
           })
           .catch(error => {
             console.error("Error from the server:", error);
