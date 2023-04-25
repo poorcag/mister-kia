@@ -20,7 +20,7 @@
           const formData = new FormData()
           formData.append("audio_file", blob)
 
-          fetch("http://127.0.0.1:8000/upload_audio/", {
+          fetch("http://localhost:8004/upload_audio/", {
             method: 'POST',
             body: formData
           })

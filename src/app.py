@@ -1,8 +1,8 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import Response, JSONResponse
+from fastapi.responses import Response, FileResponse
 
-from src.parsing import transcribe_from_audio, answer_my_question, text_to_speech
+from parsing import transcribe_from_audio, answer_my_question, text_to_speech
 
 app = FastAPI()
 
@@ -17,8 +17,8 @@ app.add_middleware(
 )
 
 @app.get("/")
-async def root():
-    return {"Hello": "Everybody"}
+async def read_index():
+    return FileResponse('/static/index.html')
 
 @app.post("/upload_audio/")
 async def upload_audio_file(audio_file: UploadFile = File(...)):
