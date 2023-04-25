@@ -20,7 +20,13 @@
         return Math.floor(Math.random() * max);
       }
 
+      var isResponding = false
+
       const startRecording = async () => {
+        if (isResponding) {
+          return;
+        }
+        isResponding = true;
         chunks = [];
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaRecorder = new MediaRecorder(stream);
@@ -43,9 +49,11 @@
             const audioElement = new Audio();
             audioElement.src = objectURL;
             audioElement.play();
+            isResponding = false;
           })
           .catch(error => {
             console.error("Error from the server:", error);
+            isResponding = false;
           })
 
           await sleep(1500);
