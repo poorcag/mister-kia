@@ -8,6 +8,5 @@ Mister know-it-all
 
 
 TODO:
-- save temp files to separate dir
-- don't reload the page when a file is created
-- finish off hooking up core functionality
+- Don't allow any other requests while one is already being processed.
+- Perhaps make one audio player for the html page to prevent the page from talking over itself

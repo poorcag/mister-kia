@@ -5,13 +5,19 @@
     <title>Record Audio</title>
   </head>
   <body>
-    <audio id="audio-thinking">
+    <audio id="audio-thinking-0">
       <source src="/static/hmm,_let_me_think.mp3" type="audio/mp3">
+    </audio>
+    <audio id="audio-thinking-1">
+      <source src="/static/Good_question,_let_me_think_about_it....mp3" type="audio/mp3">
     </audio>
     <button id="recordButton" onmousedown="startRecording()" onmouseup="stopRecording()">Record</button>
     <script>
       function sleep(ms) {
        return new Promise(resolve => setTimeout(resolve, ms));
+      }
+      function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
       }
 
       const startRecording = async () => {
@@ -44,7 +50,13 @@
 
           await sleep(1500);
 
-          var thinkingAudio = document.getElementById("audio-thinking");
+          var idx = getRandomInt(2)
+
+          var audio_elem_id = "audio-thinking-"+idx
+          console.log(audio_elem_id)
+          console.log(idx)
+
+          var thinkingAudio = document.getElementById(audio_elem_id);
           thinkingAudio.play()
         };
         mediaRecorder.start();
