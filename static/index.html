@@ -5,14 +5,21 @@
     <title>Record Audio</title>
   </head>
   <body>
+    <audio id="audio-thinking">
+      <source src="/static/hmm,_let_me_think.mp3" type="audio/mp3">
+    </audio>
     <button id="recordButton" onmousedown="startRecording()" onmouseup="stopRecording()">Record</button>
     <script>
+      function sleep(ms) {
+       return new Promise(resolve => setTimeout(resolve, ms));
+      }
+
       const startRecording = async () => {
         chunks = [];
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaRecorder = new MediaRecorder(stream);
         mediaRecorder.ondataavailable = e => chunks.push(e.data);
-        mediaRecorder.onstop = () => {
+        mediaRecorder.onstop = async () => {
           const blob = new Blob(chunks, { type: 'audio/mp3' });
           const url = URL.createObjectURL(blob);
           console.log(url);
@@ -34,6 +41,11 @@
           .catch(error => {
             console.error("Error from the server:", error);
           })
+
+          await sleep(1500);
+
+          var thinkingAudio = document.getElementById("audio-thinking");
+          thinkingAudio.play()
         };
         mediaRecorder.start();
       };

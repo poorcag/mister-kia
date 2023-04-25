@@ -1,6 +1,7 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from parsing import transcribe_from_audio, answer_my_question, text_to_speech
 
@@ -15,6 +16,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.mount("/static", StaticFiles(directory="/static"), name="static")
 
 @app.get("/")
 async def read_index():
