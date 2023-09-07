@@ -1,0 +1,115 @@
+const recordButton = document.getElementById('recordButton');
+
+const rec_state = {
+    AWAITING : 0,
+    RECORDING : 1,
+    RESPONDING : 2
+}
+
+let cur_state = rec_state.AWAITING
+let isResponding = false
+let chatContext = []
+
+recordButton.addEventListener('click', () => {
+    if (cur_state == rec_state.AWAITING) {
+        recordButton.textContent = "Tap again when done"
+        recordButton.classList.add('recording-on');
+        startRecording();
+    } else if (cur_state == rec_state.RECORDING) {
+        recordButton.textContent = "Responding now"
+        recordButton.classList.remove('recording-on');
+        stopRecording();
+    } else if (cur_state == rec_state.RESPONDING) {
+        recordButton.textContent = "Tap and ask"
+    }
+});
+
+
+document.querySelector('.microphone-button').addEventListener('mousedown', (evt) => {
+    evt.target.classList.add('loading')
+
+    setTimeout(() => {
+        evt.target.classList.remove('loading')
+    }, 3000);
+})
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+}
+
+const startRecording = async () => {
+    cur_state = rec_state.RECORDING;
+    chunks = [];
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = e => chunks.push(e.data);
+    mediaRecorder.onstop = async () => {
+        const blob = new Blob(chunks, { type: 'audio/mp3' });
+        const url = URL.createObjectURL(blob);
+        console.log(url);
+
+        const formData = new FormData()
+        formData.append("audio_file", blob)
+
+        const headers = new Headers();
+        headers.append('chat_context', JSON.stringify(chatContext));
+        console.log(chatContext)
+
+        fetch("http://localhost:8000/upload_audio/", {
+            method: 'POST',
+            body: formData,
+            headers: headers
+        })
+            .then(response => {
+                console.log("Response from server:", response);
+                chatContext.push(response.headers.get('transcription'))
+                chatContext.push(response.headers.get('answer'))
+                console.log(chatContext)
+                response.blob().then((blob) => {
+                    const objectURL = URL.createObjectURL(blob);
+                    const audioElement = new Audio();
+                    audioElement.addEventListener("ended", () => { cur_state = rec_state.AWAITING; }, false);
+                    audioElement.src = objectURL;
+                    audioElement.play();
+                }).catch(error => {
+                    console.error("Error from the blob:", error);
+                    cur_state = rec_state.AWAITING;
+                })
+            })
+            .catch(error => {
+                console.error("Error from the server:", error);
+                cur_state = rec_state.AWAITING;
+            })
+
+        await sleep(1500);
+
+        var idx = getRandomInt(2)
+
+        var audio_elem_id = "audio-thinking-" + idx
+        console.log(audio_elem_id)
+        console.log(idx)
+
+        var thinkingAudio = document.getElementById(audio_elem_id);
+        thinkingAudio.play()
+    };
+    mediaRecorder.start();
+};
+
+const stopRecording = () => {
+    cur_state = rec_state.RESPONDING;
+    console.log("stopping recording")
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+    }
+};
+
+navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(function (stream) {
+        console.log('You let me use your mic!')
+    })
+    .catch(function (err) {
+        console.log('No mic for you!')
+    });
