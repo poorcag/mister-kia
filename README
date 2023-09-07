@@ -10,3 +10,11 @@ Mister know-it-all
 TODO:
 - Don't allow any other requests while one is already being processed.
 - Perhaps make one audio player for the html page to prevent the page from talking over itself
+
+Button UI design:
+
+Possible states it can be in:
+- Waiting to be pressed
+- Currently recording
+- Processing user input
+- Performing output

@@ -3,16 +3,48 @@
   <head>
     <meta charset="utf-8">
     <title>Record Audio</title>
+    <link rel="stylesheet" href="/static/styles.css">
   </head>
   <body>
+  <div class="area" >
+    <ul class="circles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+    </ul>
+  </div >
     <audio id="audio-thinking-0">
       <source src="/static/hmm,_let_me_think.mp3" type="audio/mp3">
     </audio>
     <audio id="audio-thinking-1">
       <source src="/static/Good_question,_let_me_think_about_it....mp3" type="audio/mp3">
     </audio>
-    <button id="recordButton" onmousedown="startRecording()" onmouseup="stopRecording()">Record</button>
+    <div class="context">
+      <h1>Hold to chat to Mister Know-it-all!!
+        <div class="container">
+          <button id="recordButton">Hold me down</button>
+          <button class="microphone-button" onmousedown="startRecording()" onmouseup="stopRecording()">
+            <span class="microphone-icon"></span>
+          </button>
+        </div>
+      </h1>
+    </div>
     <script>
+      document.querySelector('.microphone-button').addEventListener('mousedown', (evt) => {
+        evt.target.classList.add('loading')
+
+        setTimeout(() => {
+          evt.target.classList.remove('loading')
+        }, 3000);
+      })
+      
       function sleep(ms) {
        return new Promise(resolve => setTimeout(resolve, ms));
       }
