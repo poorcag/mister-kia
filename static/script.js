@@ -9,21 +9,32 @@ const rec_state = {
 let cur_state = rec_state.AWAITING
 let isResponding = false
 let chatContext = []
+let mediaRecorder;
 
 recordButton.addEventListener('click', () => {
     if (cur_state == rec_state.AWAITING) {
-        recordButton.textContent = "Tap again when done"
-        recordButton.classList.add('recording-on');
         startRecording();
     } else if (cur_state == rec_state.RECORDING) {
-        recordButton.textContent = "Responding now"
-        recordButton.classList.remove('recording-on');
         stopRecording();
     } else if (cur_state == rec_state.RESPONDING) {
-        recordButton.textContent = "Tap and ask"
+        
     }
 });
 
+function setButtonState(new_state) {
+    if (new_state == rec_state.AWAITING) {
+        recordButton.textContent = "Tap and ask"
+    }
+    else if (new_state == rec_state.RECORDING) {
+        recordButton.textContent = "Tap again when done"
+        recordButton.classList.add('recording-on');
+    }
+    else if (new_state == rec_state.RESPONDING) {
+        recordButton.textContent = "Responding now"
+        recordButton.classList.remove('recording-on');
+    }
+    cur_state = new_state
+}
 
 document.querySelector('.microphone-button').addEventListener('mousedown', (evt) => {
     evt.target.classList.add('loading')
@@ -41,7 +52,7 @@ function getRandomInt(max) {
 }
 
 const startRecording = async () => {
-    cur_state = rec_state.RECORDING;
+    setButtonState(rec_state.RECORDING)
     chunks = [];
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     mediaRecorder = new MediaRecorder(stream);
@@ -71,17 +82,17 @@ const startRecording = async () => {
                 response.blob().then((blob) => {
                     const objectURL = URL.createObjectURL(blob);
                     const audioElement = new Audio();
-                    audioElement.addEventListener("ended", () => { cur_state = rec_state.AWAITING; }, false);
+                    audioElement.addEventListener("ended", () => { setButtonState(rec_state.AWAITING); }, false);
                     audioElement.src = objectURL;
                     audioElement.play();
                 }).catch(error => {
                     console.error("Error from the blob:", error);
-                    cur_state = rec_state.AWAITING;
+                    setButtonState(rec_state.AWAITING);
                 })
             })
             .catch(error => {
                 console.error("Error from the server:", error);
-                cur_state = rec_state.AWAITING;
+                setButtonState(rec_state.AWAITING);
             })
 
         await sleep(1500);
@@ -99,7 +110,7 @@ const startRecording = async () => {
 };
 
 const stopRecording = () => {
-    cur_state = rec_state.RESPONDING;
+    setButtonState(rec_state.RESPONDING);
     console.log("stopping recording")
     if (mediaRecorder && mediaRecorder.state === 'recording') {
         mediaRecorder.stop();
