@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from parsing import transcribe_from_audio, answer_my_question, text_to_speech, check_auth_keys
+from src.parsing import transcribe_from_audio, answer_my_question, text_to_speech, check_auth_keys
 
 app = FastAPI()
 
@@ -18,11 +18,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/static", StaticFiles(directory="/static"), name="static")
+app.mount("/static", StaticFiles(directory="/code/static"), name="static")
 
 @app.get("/")
 async def read_index():
-    return FileResponse('/static/index.html')
+    return FileResponse('/code/static/index.html')
 
 @app.post("/upload_audio/")
 async def upload_audio_file(request: Request, audio_file: UploadFile = File(...)):

@@ -69,7 +69,7 @@ const startRecording = async () => {
         headers.append('chat_context', JSON.stringify(chatContext));
         console.log(chatContext)
 
-        fetch("http://localhost:8000/upload_audio/", {
+        fetch("http://localhost:9090/upload_audio/", {
             method: 'POST',
             body: formData,
             headers: headers
