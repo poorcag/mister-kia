@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from parsing import transcribe_from_audio, answer_my_question, text_to_speech
+from parsing import transcribe_from_audio, answer_my_question, text_to_speech, check_auth_keys
 
 app = FastAPI()
 
@@ -32,6 +32,8 @@ async def upload_audio_file(request: Request, audio_file: UploadFile = File(...)
 
     chat_context = request.headers.get('chat_context', '[]')
     user_context = json.loads(chat_context)
+
+    check_auth_keys()
 
     transcript = await transcribe_from_audio(audio_file)
 

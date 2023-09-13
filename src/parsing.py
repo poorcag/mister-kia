@@ -1,13 +1,20 @@
 import os
 import openai
 from elevenlabs import set_api_key, generate
+import json
 
-eleven_api_key = ''
-ELEVEN_API_KEY_PATH = os.environ.get("ELEVEN_API_KEY_PATH")
-with open(ELEVEN_API_KEY_PATH) as f:
-    eleven_api_key = f.read()
+def check_auth_keys():
+    eleven_key = os.environ.get("ELEVEN_API_KEY")
+    if eleven_key:
+        set_api_key(eleven_key)
+    else:
+        print("eleven api key not found")
 
-set_api_key(eleven_api_key)
+    openai_api_key = os.environ.get("OPENAI_API_KEY")
+    if openai_api_key:
+        openai.api_key = openai_api_key
+    else:
+        print("openai api key not found")
 
 async def transcribe_from_audio(audio_file):
 
