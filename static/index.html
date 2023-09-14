@@ -1,40 +1,45 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Mr Know-it-all: speaking AI helper</title>
-    <link rel="stylesheet" href="/static/styles.css">
-    <link rel="icon" type="image/x-icon" href="/static/fav/favicon.ico">
-  </head>
-  <body>
-  <div class="area" >
+
+<head>
+  <meta charset="utf-8">
+  <title>Mr Know-it-all: speaking AI helper</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="icon" type="image/x-icon" href="/static/fav/favicon.ico">
+</head>
+
+<body>
+  <div class="area">
     <ul class="circles">
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
     </ul>
-  </div >
-    <audio id="audio-thinking-0">
-      <source src="/static/hmm,_let_me_think.mp3" type="audio/mp3">
-    </audio>
-    <audio id="audio-thinking-1">
-      <source src="/static/Good_question,_let_me_think_about_it....mp3" type="audio/mp3">
-    </audio>
-    <div class="context">
-      <h1>I'm Mister Know-it-all! Ask me anything!!
-        <div class="container">
-          <button class="microphone-button" id="recordButton">Tap and ask</button>
-        </div>
-      </h1>
-    </div>
-    <script src="/static/script.js">
-    </script>
-  </body>
+  </div>
+  <audio id="audio-thinking-0">
+    <source src="/static/mp3/hmm,_let_me_think.mp3" type="audio/mp3">
+  </audio>
+  <audio id="audio-thinking-1">
+    <source src="/static/mp3/Good_question,_let_me_think_about_it....mp3" type="audio/mp3">
+  </audio>
+  <div class="context">
+    <h1>I'm Mister Know-it-all! Ask me anything!!
+      <div class="container">
+        <button class="microphone-button" id="recordButton">Tap and ask</button>
+      </div>
+    </h1>
+  </div>
+  <script src="/static/js/effects.js">
+  </script>
+  <script src="/static/js/recording.js">
+  </script>
+</body>
+
 </html>
