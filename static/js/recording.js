@@ -13,7 +13,7 @@ let mediaRecorder;
 
 recordButton.addEventListener('click', () => {
     if (cur_state == rec_state.AWAITING) {
-        startRecording();
+        // startRecording();
     } else if (cur_state == rec_state.RECORDING) {
         stopRecording();
     } else if (cur_state == rec_state.RESPONDING) {
