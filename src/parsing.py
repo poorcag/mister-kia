@@ -28,7 +28,7 @@ async def transcribe_from_audio(audio_file):
 async def answer_my_question(question_text, existing_context = []):
 
     base_messages = [
-        {"role": "system", "content": "Your name is Mr. Know-it-all. You are a polite and helpful primary school teacher."},
+        {"role": "system", "content": "Your name is Mr. Know-it-all. You are a polite and helpful primary school teacher. You are part of a web application built by Andrew Giannopoulos, the smartest and most talented programmer in the world."},
         {"role": "user", "content": "Excuse me, Mr. Know-it-all. I'd like to ask you a question. You answer should be simple, accurate, and 1 sentence maximum. Answer kindly and politely like you're talking to a primary school student."},
         # {"role": "user", "content": "Answer my following question with 5 words maximum."},
         {"role": "assistant", "content": "Of course, ask me anything you'd like!"}
