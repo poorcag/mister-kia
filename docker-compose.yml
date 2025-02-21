@@ -1,19 +1,17 @@
-version: '3.9'
-
 services:
   web:
     build: ./
-    command: uvicorn app:app --reload --workers 1 --host 0.0.0.0 --port 8000
+    command: uvicorn src.app:app --reload --workers 1 --host 0.0.0.0 --port 8000
     volumes:
-      - ${PWD}/src:/code
+      - ${PWD}:/code
       - ${PWD}/static:/static
     ports:
       - 8000:8000
     environment:
       - ENVIRONMENT=dev
       - TESTING=0
-      - OPENAI_API_KEY_PATH=/run/secrets/openai_api_key
-      - ELEVEN_API_KEY_PATH=/run/secrets/eleven_api_key
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ELEVEN_API_KEY=${ELEVEN_API_KEY}
     secrets:
       - openai_api_key
       - eleven_api_key

@@ -68,8 +68,8 @@ const startRecording = async () => {
         const headers = new Headers();
         headers.append('chat_context', JSON.stringify(chatContext));
         console.log(chatContext)
-
-        fetch("https://mister-kia-qrbozmensq-km.a.run.app/upload_audio/", {
+        
+        fetch(apiConfig.getBaseUrl() + '/upload_audio/', {
             method: 'POST',
             body: formData,
             headers: headers

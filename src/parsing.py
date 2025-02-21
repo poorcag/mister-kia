@@ -11,6 +11,10 @@ def check_auth_keys():
         print("eleven api key not found")
 
     openai_api_key = os.environ.get("OPENAI_API_KEY")
+
+    print("OPENAI_API_KEY")
+    print(openai_api_key)
+    
     if openai_api_key:
         openai.api_key = openai_api_key
     else:
